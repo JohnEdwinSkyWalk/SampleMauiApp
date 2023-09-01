@@ -54,4 +54,14 @@
       <PackageReference Include="System.Net.Http" Version="4.3.4" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RazorClassLibrary1\RazorClassLibrary1.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="Pages\NewPage1.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
 </Project>

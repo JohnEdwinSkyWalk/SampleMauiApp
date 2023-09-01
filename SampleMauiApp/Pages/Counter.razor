@@ -5,12 +5,24 @@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="Checkinternet">Check Internet Service</button>
 
 @code {
     private int currentCount = 0;
 
     private void IncrementCount()
     {
-        currentCount++;
+        currentCount+=10;
+    }
+
+    private async void Checkinternet()
+    {
+        var hasIntent = Connectivity.Current.NetworkAccess == NetworkAccess.Internet;
+        var inttype = Connectivity.Current.ConnectionProfiles.FirstOrDefault();
+
+        await Application.Current.MainPage.DisplayAlert("Internet", $"Status: {hasIntent} of type {inttype}", "OK");
+
+
+//Microsoft.Maui.Networking.Connectivity
     }
 }

@@ -1,0 +1,48 @@
+﻿@page "/Products"
+@using BlazorApp1.Services;
+@using RazorClassLibrary1;
+@inject IProductsService _productServices;
+
+
+@code {
+    private IEnumerable<RazorClassLibrary1.Product> Data = null;
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Data = await _productServices.GetProductsAsync();
+    }
+}
+
+<h3>Product</h3>
+@if(Data == null)
+{
+    <h4>Loading..</h4>
+
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Brand</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Data)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.Brand</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

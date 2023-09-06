@@ -1,6 +1,6 @@
 ﻿using RazorClassLibrary1;
 
-namespace BlazorApp1.Client.Services
+namespace SampleMauiApp.Services
 {
     public interface IProductsService
     {

@@ -32,7 +32,14 @@
             </BlazorWebView.RootComponents>
         </BlazorWebView>
     </ContentPage>
-   
+    <ContentPage Title="Products">
+        <BlazorWebView HostPage="wwwroot/index.html">
+            <BlazorWebView.RootComponents>
+                <RootComponent Selector="#app" ComponentType="{x:Type pages:Product}" />
+            </BlazorWebView.RootComponents>
+        </BlazorWebView>
+    </ContentPage>
+    
     <pages:NewPage1/>
 
 </TabbedPage>

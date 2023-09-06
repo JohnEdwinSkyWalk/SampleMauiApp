@@ -4,11 +4,11 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleMauiApp", "SampleMauiApp\SampleMauiApp.csproj", "{18DE4170-43B7-43E5-A211-3DC57EECA81B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp1", "BlazorApp1\BlazorApp1.csproj", "{3C50E5D5-A7AB-409D-99F8-77AF4C078F52}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp1.Client", "BlazorApp1\BlazorApp1.Client.csproj", "{3C50E5D5-A7AB-409D-99F8-77AF4C078F52}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RazorClassLibrary1", "RazorClassLibrary1\RazorClassLibrary1.csproj", "{C4576404-16D4-411B-B362-96591FBB12E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi1", "WebApi1\WebApi1.csproj", "{82B00B0C-3F3E-4501-9917-85D761FBE7BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi1.Server", "WebApi1\WebApi1.Server.csproj", "{82B00B0C-3F3E-4501-9917-85D761FBE7BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

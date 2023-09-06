@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Components.WebView.Maui;
 using SampleMauiApp.Data;
 using System.Net.Http;
+using SampleMauiApp.Services;
+using Microsoft.Extensions.Http;
+
+
 
 namespace SampleMauiApp;
 
@@ -19,11 +23,15 @@ public static class MauiProgram
 		//builder.Services.AddHttpClient();
 
 		builder.Services.AddMauiBlazorWebView();
-		#if DEBUG
+#if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
-		
+
 		builder.Services.AddSingleton<WeatherForecastService>();
+		builder.Services.AddHttpClient<IProductsService, ProductsService>(client =>
+		{
+			client.BaseAddress = new Uri("https://localhost:7241/");
+		});
 
 		return builder.Build();
 	}

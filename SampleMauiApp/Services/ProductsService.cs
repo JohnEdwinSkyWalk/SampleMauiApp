@@ -2,7 +2,7 @@
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorApp1.Client.Services
+namespace SampleMauiApp.Services
 {
     public class ProductsService: IProductsService
     {

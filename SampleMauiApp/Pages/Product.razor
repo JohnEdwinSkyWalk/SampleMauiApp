@@ -1,6 +1,6 @@
 ﻿@page "/Products"
 
-@using BlazorApp1.Client.Services;
+@using SampleMauiApp.Services;
 @using RazorClassLibrary1;
 @inject IProductsService _productServices;
 @inject NavigationManager NavigationManager
@@ -17,7 +17,7 @@
 
     void DisplayProduct(int id)
     {
-        NavigationManager.NavigateTo($"Product/{id}");
+        NavigationManager.NavigateTo($"SingleProduct/{id}");
     }
 }
 

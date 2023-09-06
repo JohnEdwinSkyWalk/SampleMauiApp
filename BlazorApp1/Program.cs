@@ -1,7 +1,9 @@
-using BlazorApp1.Data;
-using BlazorApp1.Services;
+using BlazorApp1.Client.Data;
+using BlazorApp1.Client.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+//using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 //builder.Services.AddSingleton<IProductsService, ProductsService>();
 builder.Services.AddHttpClient<IProductsService, ProductsService>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7241/");
+client.BaseAddress = new Uri( "https://localhost:7241/");
 });
 
 var app = builder.Build();

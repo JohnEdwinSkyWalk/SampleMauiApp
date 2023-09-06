@@ -1,0 +1,85 @@
+﻿@page "/SingleProduct"
+@page "/SingleProduct/{id:int}"
+
+@using SampleMauiApp.Services;
+@using RazorClassLibrary1;
+@inject IProductsService _productServices;
+
+@if(Id == null)
+{
+    <PageTitle>Creae a new Product</PageTitle>
+    <h3>Create a new Product</h3>
+}
+else
+{
+    <PageTitle>Edit @product.Name</PageTitle>
+    <h3>Edit @product.Name</h3>
+}
+
+<EditForm Model="product" OnSubmit="SubmitProduct">
+    <div>
+        <label for="Name">Product Name</label>
+    <InputText id="Name" class="form-control" @bind-Value="product.Name"></InputText>
+    </div>
+    <div>
+        <label for="Price">Price</label>
+    <InputText id="Price" class="form-control" Value="product.Price.ToString()"></InputText>
+    </div>
+     <div>
+        <label for="Quantity">Quantity</label>
+    <InputText id="Quantity" class="form-control" Value="product.Quantity.ToString()"></InputText>
+    </div>
+    <div>
+        <label for="Brand"> Brand</label>
+    <InputText id="Brand" class="form-control" @bind-Value="product.Brand"></InputText>
+    </div>
+    <div>
+        <label for="Category">Category</label>
+        <InputSelect @bind-Value="product.Id" class="form-select">
+            @foreach(var item in _productServices.Categories())
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        </InputSelect>
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">@btnText</button>
+</EditForm>
+
+
+@code {
+    [Parameter]
+
+    public int? Id { get; set; }
+
+    RazorClassLibrary1.Product product = new RazorClassLibrary1.Product { Category = new Category() };
+
+    string btnText = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        btnText = Id ==  null ? "Save new Product" : "Update Product";
+        await _productServices.GetCategories();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(Id ==  null)
+        {
+
+        }
+        else
+        {
+            product = await _productServices.GetProductAsync((int)Id);
+        }
+    }
+
+    async Task EditProduct(int id)
+    {
+
+    }
+    async Task SubmitProduct()
+    {
+        
+    }
+}

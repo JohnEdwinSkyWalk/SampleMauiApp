@@ -17,13 +17,26 @@
 
     void DisplayProduct(int id)
     {
-        NavigationManager.NavigateTo($"Product/{id}");
+        NavigationManager.NavigateTo($"SingleProduct/{id}");
+    }
+
+    void CreateNewProduct()
+    {
+        NavigationManager.NavigateTo($"SingleProduct");
+    }
+
+    async Task DeleteProduct(int id)
+    {
+        await _productServices.deleteProductAsync(id);
     }
 }
 
 <PageTitle>Products</PageTitle>
 
 <h3>Products</h3>
+
+    <button type="button" class="btn btn-primary float-end" @onclick="CreateNewProduct">New Product</button>
+
 
 @if(Data == null)
 {
@@ -56,7 +69,8 @@ else
                     <td>@item.Brand</td>
                     <td>@item.Category.Name.ToString()</td>
                     <td>
-                        <button class="btn btn-primary" @onclick="(() => DisplayProduct(item.Id))"><i class="oi oi-pencil"></i></button>
+                        <button class="btn btn-primary" @onclick="(() => DisplayProduct(item.Id))"><i class="oi oi-pencil"></i></button> |
+                        <button type="button" class="btn btn-danger" @onclick="(() => DeleteProduct(item.Id))">Delete</button>
                     </td>
                 </tr>
             }

@@ -7,32 +7,30 @@ namespace WebApi1.Server.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-
-        public static List<RazorClassLibrary1.Category> categories = new List<RazorClassLibrary1.Category> { 
-            new RazorClassLibrary1.Category { Id = 1, Name = "General" },
-            new RazorClassLibrary1.Category { Id = 2, Name = "Grossery" }
-        };
-
-        public static List<RazorClassLibrary1.Product> products = new List<RazorClassLibrary1.Product> { 
-            new RazorClassLibrary1.Product { Id = 1, Name = "Product 1", Brand = "Brand 1", Price = 1, Quantity = 1, Category = categories[1]  },
-            new RazorClassLibrary1.Product { Id = 2, Name = "Product 2", Brand = "Brand 2", Price = 2, Quantity = 2, Category = categories[1]  },
-            new RazorClassLibrary1.Product { Id = 3, Name = "Product 3", Brand = "Brand 3", Price = 3, Quantity = 3, Category = categories[1]  },
-            new RazorClassLibrary1.Product { Id = 4, Name = "Product 4", Brand = "Brand 4", Price = 4, Quantity = 4, Category = categories[0]  },
-            new RazorClassLibrary1.Product { Id = 5, Name = "Product 5", Brand = "Brand 5", Price = 5, Quantity = 5, Category = categories[0]  },
-        };
-        public ProductController() { }
+        private readonly DataContext _dataContext;
+        public ProductController(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
         [HttpGet]
         [Route("getProducts")]
         public async Task<ActionResult<List<RazorClassLibrary1.Product>>> getProducts()
         {
+            var products = await  _dataContext.Products.Include(x => x.Category).ToListAsync();
             return Ok(products);
+        }
+
+        private async Task<ActionResult<List<RazorClassLibrary1.Product>>> getDbAllProducts()
+        {
+            return await _dataContext.Products.Include(x => x.Category).ToListAsync();
         }
 
         [HttpGet]//("categories")
         [Route("getCategories")]
         public async Task<ActionResult<List<RazorClassLibrary1.Product>>> getCategories()
         {
+            var categories = await _dataContext.Categories.ToListAsync();
             return Ok(categories);
         }
 
@@ -41,18 +39,68 @@ namespace WebApi1.Server.Controllers
         {
             try
             {
-                var Products = products.FirstOrDefault(pr => pr.Id == id);
-                if (Products == null)
+                var product = await _dataContext.Products
+                    .Include(x => x.Category)
+                    .FirstOrDefaultAsync(pr => pr.Id == id);
+                if (product == null)
                 {
                     return NotFound("Sorry! No products found here..");
                 }
 
-                return Ok(Products);
+                return Ok(product);
             }
             catch(Exception ex)
             {
                 return NotFound($"Sorry! No products found here.. {ex.ToString()}");
             }
+        }
+
+        [HttpPost]
+        [Route("createProduct")]
+        public async Task<ActionResult<List<Product>>> createProduct(Product product)
+        {
+                product.Category = null;
+                _dataContext.Products.Add(product);
+                await _dataContext.SaveChangesAsync();
+                return Ok(await getDbAllProducts());
+
+                throw new Exception($"Sorry! Failed to add");
+        }
+        [HttpPut]
+        [Route("updateProduct")]
+        public async Task<ActionResult<List<Product>>> updateProduct(Product editedproduct)
+        {
+            var product = await _dataContext.Products
+                    .Include(x => x.Category)
+                    .FirstOrDefaultAsync(pr => pr.Id == editedproduct.Id);
+            if(product == null)
+                return NotFound("Sorry! No such product found for update..");
+            product.Name= editedproduct.Name;
+            product.Price = editedproduct.Price;
+            product.Quantity= editedproduct.Quantity;
+            product.Brand = editedproduct.Brand;
+            product.CategoryId= editedproduct.CategoryId;
+
+            _dataContext.Products.Update(product);
+            await _dataContext.SaveChangesAsync();
+            return Ok(await getDbAllProducts());
+
+            throw new Exception($"Sorry! Failed to update");
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<List<Product>>> deleteProduct(int Id)
+        {
+            var product = await _dataContext.Products
+                    .Include(x => x.Category)
+                    .FirstOrDefaultAsync(pr => pr.Id == Id);
+            if (product == null)
+                return NotFound("Sorry! No such product found for delete..");
+            _dataContext.Products.Remove(product);
+            await _dataContext.SaveChangesAsync();
+            return Ok(await getDbAllProducts());
+
+            throw new Exception($"Sorry! Failed to delete");
         }
     }
 }

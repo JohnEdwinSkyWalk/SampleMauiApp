@@ -6,8 +6,11 @@ namespace BlazorApp1.Client.Services
     {
         List<Product> Products();
         List<Category> Categories();
-        Task GetCategories();
+        Task GetCategoriesAsync();
         Task<IEnumerable<Product>> GetProductsAsync(); 
         Task<Product> GetProductAsync(int id); 
+        Task CreateProductAsync(Product product); 
+        Task updateProductAsync(Product product); 
+        Task deleteProductAsync(int id); 
     }
 }

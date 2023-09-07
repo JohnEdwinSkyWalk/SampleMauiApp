@@ -1,9 +1,15 @@
-﻿@page "/Product"
-@page "/Product/{id:int}"
+﻿@page "/SingleProduct"
+@page "/SingleProduct/{id:int}"
 
 @using BlazorApp1.Client.Services;
 @using RazorClassLibrary1;
+@using System.ComponentModel.DataAnnotations
 @inject IProductsService _productServices;
+@inject ILogger<Product> Logger
+
+<a class="link-underline-light  float-end" href="products">
+    <span class="oi oi-arrow-left" aria-hidden="true"></span> Back
+</a>
 
 @if(Id == null)
 {
@@ -16,22 +22,25 @@ else
     <h3>Edit @product.Name</h3>
 }
 
-<EditForm Model="@(product)" OnSubmit="SubmitProduct">
+
+<EditForm Model="@(product)" OnValidSubmit="SubmitProduct">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
     <div>
         <label for="Name">Product Name</label>
-        <InputText id="Name" class="form-control" Value="@(product.Name)" ></InputText>
+        <InputText type="" id="Name" class="form-control" @bind-Value="@(product.Name)"></InputText>
     </div>
     <div>
-        <label for="Price">Price</label>
-        <InputText id="Price" class="form-control" Value="@(product.Price.ToString())" ></InputText>
+        <label for="Price"> Price</label>
+        <InputNumber id="Price" class="form-control" @bind-Value="@product.Price"></InputNumber>
     </div>
-     <div>
-        <label for="Quantity">Quantity</label>
-        <InputText id="Quantity" class="form-control" Value="@(product.Quantity.ToString())" ></InputText>
+    <div>
+        <label for="Quantity"> Quantity</label>
+        <InputNumber id="Quantity" class="form-control" @bind-Value="@(product.Quantity)"></InputNumber>
     </div>
     <div>
         <label for="Brand"> Brand</label>
-        <InputText id="Brand" class="form-control" Value="@(product.Brand)" ></InputText>
+        <InputText id="Brand" class="form-control" @bind-Value="@(product.Brand)"></InputText>
     </div>
     <div>
         <label for="Category">Category</label>
@@ -44,26 +53,32 @@ else
     </div>
     <br/>
     <button type="submit" class="btn btn-primary">@btnText</button>
+    <button type="button" class="btn btn-danger" @onclick="DeleteProduct">Delete</button>
 </EditForm>
 
 
 @code {
     [Parameter]
     public int? Id { get; set; }
+
+    private int? inputValue = 123;
     RazorClassLibrary1.Product product = new RazorClassLibrary1.Product { Category = new Category() };
 
     string btnText = string.Empty;
 
+
     protected override async Task OnInitializedAsync()
     {
         btnText = Id ==  null ? "Save new Product" : "Update Product";
-        await _productServices.GetCategories();
+        await _productServices.GetCategoriesAsync();
     }
 
     protected override async Task OnParametersSetAsync()
     {
         if(Id ==  null)
         {
+            product.Category = (RazorClassLibrary1.Category)_productServices.Categories()[0];
+            product.CategoryId = product.Category.Id;
 
         }
         else
@@ -72,12 +87,24 @@ else
         }
     }
 
-    async Task EditProduct(int id)
-    {
-
-    }
+    
     async Task SubmitProduct()
     {
-        
+        Logger.LogInformation("Id = {Id}", product?.Id);
+
+        if (Id == null)
+        {
+            await _productServices.CreateProductAsync(product);
+
+        }
+        else
+        {
+            await _productServices.updateProductAsync(product);
+        }
     }
-}
+
+    async Task DeleteProduct()
+    {
+        await _productServices.deleteProductAsync(product.Id);
+    }
+ }
